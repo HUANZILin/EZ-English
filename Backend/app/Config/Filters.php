@@ -24,6 +24,8 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'JwtAuth'       => \App\Filters\JwtAuth::class,
+        'ApiAccessFilter'  => \App\Filters\ApiAccessFilter::class,
     ];
 
     /**
@@ -35,6 +37,7 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
+            'ApiAccessFilter',
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
