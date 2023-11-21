@@ -40,8 +40,8 @@ class Quiz extends BaseController
         $returnData['wordsData'] = $wordsModel->select('words.*, IF(collect.created_at=collect.updated_at, "true", "false") AS collect')
                                             ->join('collect', new RawSql($sql),'left')
                                             ->orderBy('title',"RANDOM")
-                                            ->limit(20)
-                                            ->findAll();
+                                            ->limit(10)
+                                            ->find();
         
         if($returnData['wordsData'] === null || empty($returnData['wordsData'])) {
             return $this->fail("查無單字", 404);
@@ -54,7 +54,7 @@ class Quiz extends BaseController
         ]);
     }
 
-    public function quizcollect()
+    public function quizCollect()
     {
         $m_id = session()->get("memberdata")->m_id;
 
@@ -66,8 +66,8 @@ class Quiz extends BaseController
                                             ->where('collect.m_id', $m_id)
                                             ->where('collect.created_at=collect.updated_at')
                                             ->orderBy('title',"RANDOM")
-                                            ->limit(20)
-                                            ->findAll();
+                                            ->limit(10)
+                                            ->find();
         
         if($returnData['wordsData'] === null || empty($returnData['wordsData'])) {
             return $this->fail("查無收藏單字", 404);
