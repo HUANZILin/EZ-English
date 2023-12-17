@@ -85,7 +85,6 @@ class VisitorManage extends BaseController
         $account    = $data['account'] ?? null;
         $password   = $data['password'] ?? null;
         $repassword = $data['repassword'] ?? null;
-        $identity   = $data['identity'] ?? false;
 
         if($account === null || $password === null || $repassword === null) {
             return $this->fail("需帳號密碼進行註冊", 404);
@@ -109,7 +108,6 @@ class VisitorManage extends BaseController
         $values = [
             'm_account'  =>  $account,
             'm_password' =>  password_hash($password, PASSWORD_DEFAULT),
-            'm_identity' =>  $identity,
         ];
         $membersModel->insert($values);
 
@@ -118,5 +116,11 @@ class VisitorManage extends BaseController
             "data"   => "Welcome new member",
             "msg"    => "Welcome new member"
         ]);
+    }
+
+    public function logout()
+    {
+        $this->session->destroy();
+        return redirect()->to("/");
     }
 }

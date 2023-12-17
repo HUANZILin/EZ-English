@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\WordsModel;
 use App\Models\CollectModel;
+use CodeIgniter\Database\RawSql;
 
 class Collection extends BaseController
 {
@@ -14,13 +14,32 @@ class Collection extends BaseController
     public function index()
     {
         $m_id = session()->get("memberdata")->m_id;
-        
-        $collectModel = new CollectModel();
-        $returnData['wordsData'] = $collectModel->join('words', 'collect.w_id = words.w_id','right')
-                                            ->where('collect.m_id', $m_id)
-                                            ->findAll();
 
+        $sql = "collect.w_id = words.w_id and collect.m_id = {$m_id}";
+        $sql2 = "practice.w_id = words.w_id and practice.m_id = {$m_id}";
 
+        // $wordsModel = new WordsModel();
+        // $returnData['wordsData'] = $wordsModel->select('words.*, IF(collect.created_at=collect.updated_at, "true", "false") AS collect, MAX(practice.created_at) AS latest_datetime, AVG(practice.p_score) AS average_score')
+        //                                     ->join('collect', new RawSql($sql),'left')
+        //                                     ->join('practice', new RawSql($sql2),'left')
+        //                                     ->where('collect.m_id', $m_id)
+        //                                     ->groupBy('words.w_id')
+        //                                     ->having('collect', 'true')
+        //                                     ->orderBy('latest_datetime','DESC')
+        //                                     ->findAll();
+
+        $db      = \Config\Database::connect();
+        $builder = $db->table('words');
+        $returnData['wordsData'] = $builder->select('words.*, IF(collect.created_at=collect.updated_at, "true", "false") AS collect, MAX(practice.created_at) AS latest_datetime, AVG(practice.p_score) AS average_score')
+                                        ->join('collect', new RawSql($sql),'left')
+                                        ->join('practice', new RawSql($sql2),'left')
+                                        ->where('collect.m_id', $m_id)
+                                        ->groupBy('words.w_id')
+                                        ->having('collect', 'true')
+                                        ->orderBy('latest_datetime','DESC')
+                                        ->get()
+                                        ->getResult();
+    
         return $this->respond([
             "status" => true,
             "data"   => $returnData,
@@ -39,8 +58,14 @@ class Collection extends BaseController
             return $this->fail("請輸入單字", 404);
         }
 
-        $wordsModel = new WordsModel();
-        $verifyWordData = $wordsModel->where('w_id', $w_id)->first();
+        // $wordsModel = new WordsModel();
+        // $verifyWordData = $wordsModel->where('w_id', $w_id)->first();
+
+        $db      = \Config\Database::connect();
+        $builder = $db->table('words');
+        $verifyWordData = $builder->where('w_id', $w_id)
+                                        ->get()
+                                        ->getResult();
 
         if($verifyWordData === null) {
             return $this->fail("查無此單字", 404);
@@ -50,7 +75,7 @@ class Collection extends BaseController
         $verifyCollectData = $collectModel->where('m_id', $m_id)->where('w_id', $w_id)->first();
 
         if($verifyCollectData != null) {
-            $returnData = "重複加入收藏";
+            return $this->fail("重複加入收藏", 404);
         }else{
             $values = [
                 'm_id'  =>  $m_id,
@@ -96,8 +121,14 @@ class Collection extends BaseController
         $m_id = 1;
 
         for($i=1;$i<200;$i+=2){
-            $wordsModel = new WordsModel();
-            $verifyWordData = $wordsModel->where('w_id', $i)->first();
+            // $wordsModel = new WordsModel();
+            // $verifyWordData = $wordsModel->where('w_id', $w_id)->first();
+
+            $db      = \Config\Database::connect();
+            $builder = $db->table('words');
+            $verifyWordData = $builder->where('w_id', $i)
+                                            ->get()
+                                            ->getResult();
 
             if($verifyWordData === null) {
                 return $this->fail("查無此單字", 404);

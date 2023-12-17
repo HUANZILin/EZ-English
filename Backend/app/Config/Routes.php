@@ -42,31 +42,37 @@ $routes->post('/login', 'VisitorManage::login');
 // $routes->get('/send', 'SendEmail::push');
 // $routes->get('/addMulti', 'Collection::addMulti');
 // $routes->get('/removeMulti', 'Collection::removeMulti');
+// $routes->get('/multiAddQuizData', 'Quiz::multiAddQuizData');
 
-$routes->group('/', ['filter' => 'JwtAuth'], function($routes)
+$routes->group('/', ['filter' => 'JwtAuth','ApiAccessFilter'], function($routes)
 {
     $routes->get('/home', 'MemberManage::index');
+    $routes->get('/logout', 'VisitorManage::logout');
 
-    $routes->get('/editMemberData', 'MemberManage::renderEditMemberDataPage');
-    $routes->put('/editMemberData', 'MemberManage::update');
-    $routes->delete('/delete', 'MemberManage::delete');
+    // $routes->get('/editMemberData', 'MemberManage::renderEditMemberDataPage');
+    // $routes->put('/editMemberData', 'MemberManage::update');
+    // $routes->delete('/delete', 'MemberManage::delete');
 
-    $routes->get('/addWords', 'WordManage::index');
-    $routes->post('/addWords', 'WordManage::create');
+    // $routes->get('/addWords', 'WordManage::index');
+    // $routes->post('/addWords', 'WordManage::create');
 
     $routes->get('/wordList', 'WordList::index');
-    $routes->post('/wordList', 'wordList::search');
+    $routes->post('/wordList', 'WordList::search');
     $routes->get('/wordList/(:num)', 'WordList::perWord/$1');
 
     $routes->get('/collection', 'Collection::index');
     $routes->post('/collection', 'Collection::add');
     $routes->delete('/collection/(:num)', 'Collection::remove/$1');
 
-    $routes->get('/quizData', 'Quiz::index');
     $routes->get('/quizrandom', 'Quiz::quizRandom');
     $routes->get('/quizcollect', 'Quiz::quizCollect');
-    $routes->post('/quizcollect', 'Quiz::addQuizData');
-    // $routes->get('/mutiAddQuizData', 'Quiz::mutiAddQuizData');
+    $routes->post('/quizData', 'Quiz::addQuizData');
+
+    $routes->get('/analysis', 'Analysis::index');
+    $routes->get('/quizData', 'Quiz::index');
+
+    $routes->get('/video', 'Video::index');
+    $routes->post('/video', 'Video::addChat');
 });
 
 /*

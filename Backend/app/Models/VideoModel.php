@@ -4,16 +4,16 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PracticeModel extends Model
+class VideoModel extends Model
 {
-    protected $table            = 'practice';
-    protected $primaryKey       = 'p_id';
+    protected $table            = 'video';
+    protected $primaryKey       = 'v_id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'p_id', 'm_id', 'w_id', 'p_score', 'p_select'
+        'v_id', 'm_id', 'v_dialogue'
     ];
 
     // Dates
