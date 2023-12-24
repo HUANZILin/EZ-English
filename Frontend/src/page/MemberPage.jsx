@@ -4,12 +4,16 @@ import styled from "styled-components";
 import { fetchMember } from "../util/http";
 import Modal from "../components/UI/Modal";
 import Container from "../components/UI/Container";
+import ErrorBlock from "../components/UI/ErrorBlock";
+import LoadingIndicator from "../components/UI/LoadingIndicator";
+import Title from "../components/Title";
 
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  margin-top: 2rem;
 
   label {
     font-size: 1.5rem;
@@ -70,27 +74,30 @@ const AlertButton = styled.button`
 `;
 
 const MemberPage = () => {
-  const { data, isPending, isError } = useQuery({
+  const memberData = {
+    id: "12",
+    account: "testuser1216@gmail.com",
+    password: "testuser1216",
+  };
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["memberData"],
     queryFn: fetchMember,
   });
+  const [newPassword, setNewPassword] = useState(memberData.password);
   const [isEdit, setIsEdit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-
-  const memberData = {
-    id: "#1234",
-    account: "abc@gmail.com",
-    password: "123abc",
-  };
 
   const editHandler = (e) => {
     e.preventDefault();
     setIsEdit(true);
+    setNewPassword("");
   };
 
   const saveHandler = (e) => {
     e.preventDefault();
     setIsEdit(false);
+    setNewPassword(e.target.value);
+    alert("修改成功！");
   };
 
   const deleteHandler = (e) => {
@@ -108,12 +115,26 @@ const MemberPage = () => {
 
   let content;
 
-  if (isPending) {
-    content = <h1>Loading...</h1>;
+  if (isLoading) {
+    content = (
+      <>
+        <h2
+          style={{ fontSize: "28px", alignSelf: "center", marginTop: "2rem" }}
+        >
+          Loading...
+        </h2>
+        <LoadingIndicator />
+      </>
+    );
   }
 
   if (isError) {
-    content = <h1>An Error occurred.</h1>;
+    content = (
+      <ErrorBlock
+        title={"發生錯誤"}
+        message={"取得資料時發生錯誤，請確認網路連線或於片刻後重整頁面。"}
+      />
+    );
   }
 
   if (data) {
@@ -122,12 +143,12 @@ const MemberPage = () => {
         <label htmlFor="userId">UID</label>
         <input type="text" placeholder={memberData.id} disabled />
         <label htmlFor="account">帳號/Email</label>
-        <input type="email" placeholder={memberData.account} disabled />
+        <input type="email" placeholder={data} disabled />
         <label htmlFor="password">密碼</label>
         {isEdit ? (
           <input id="password" type="text" />
         ) : (
-          <input type="text" placeholder={data} disabled />
+          <input type="text" placeholder={newPassword} disabled />
         )}
         <div>
           {!isEdit && <button onClick={editHandler}>修改密碼</button>}
@@ -150,16 +171,7 @@ const MemberPage = () => {
 
   return (
     <Container>
-      <h1
-        style={{
-          paddingTop: "100px",
-          textAlign: "center",
-          letterSpacing: "2rem",
-        }}
-      >
-        &thinsp;會員資料
-      </h1>
-      <hr width="80%" />
+      <Title title={"會員資料"} />
       {isDelete && (
         <Modal>
           <h2>確定要刪除嗎?</h2>

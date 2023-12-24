@@ -10,6 +10,7 @@ const StyledDialog = styled.dialog`
   left: calc(50% - 15rem);
   width: 30rem;
   max-height: 80vh;
+  color: #314543;
   background: #e2e4dd;
   border: none;
   border-radius: 6px;

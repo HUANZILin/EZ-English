@@ -3,9 +3,12 @@ import { QueryClient } from "@tanstack/react-query";
 export const queryClient = new QueryClient();
 
 export const fetchMember = async () => {
-  const response = await fetch(
-    "https://petstore3.swagger.io/api/v3/user/theUser"
-  );
+  const token = sessionStorage.getItem("memberToken");
+  const response = await fetch("https://jybluega.com/ez-backend/home", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     const error = new Error("取得會員資料時發生錯誤");
@@ -14,9 +17,9 @@ export const fetchMember = async () => {
     throw error;
   }
 
-  const { password } = await response.json();
+  const { data } = await response.json();
 
-  return password;
+  return data.slice(15);
 };
 
 export async function updatePassword({ id, password }) {

@@ -1,102 +1,136 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import styled from "styled-components";
 
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-top: 8rem;
-`;
+import Container from "../components/UI/Container";
+import Title from "../components/Title";
 
 const StyledForm = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 2rem;
+
+  label {
+    font-size: 1.5rem;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  input {
+    height: 2.5rem;
+    width: 20vw;
     text-align: center;
-    .formTop {
-        display: flex;
-        margin: 3rem 0rem 3rem 0rem;
-      }
-      .formButtom {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 5rem;
-        a {
-          color: #e2e4dd;
-          text-decoration: none;
-          padding: 0.1rem 3rem;
-        }
-        .register {
-          margin-top: 10px;
-          text-decoration: underline;
-        }
-      }
-      .label {
-        display: flex;
-        flex-direction: column;
-        padding-right: 2rem;
-        align-items: center;
-        label {
-          font-size: 1.5rem;
-          font-weight: 500;
-          margin-bottom: 15px;
-        }
-      }
-      .input {
-        display: flex;
-        flex-direction: column;
-        input {
-          background-color: #e2e4dd;
-          color: #314543;
-          border: none;
-          outline: none;
-          border-radius: 20px;
-          padding: 6px 25px 6px 25px;
-          margin-bottom: 2rem;
-        }
-      }
-      button {
-        background-color: #314543;
-        color: #e2e4dd;
-        border: none;
-        border-radius: 30px;
-        padding: 0.5rem 1rem;
-      }
+    line-height: 2.5rem;
+    color: #314543;
+    background-color: #e2e4dd;
+    border: 0px;
+    border-radius: 2rem;
+    float: right;
+    outline: none;
+  }
+
+  input::placeholder {
+    color: #314543;
+    opacity: 0.6;
+  }
+
+  button {
+    margin: 60px 10px 100px 10px;
+    height: 2.5rem;
+    font-size: 1rem;
+    color: #e2e4dd;
+    background-color: #314543;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 40px;
+  }
 `;
 
 const RegisterPage = () => {
-    return(
-        <Container>
-            <h1 style={{color: "#e2e4dd",
-            letterSpacing: "1rem",
-            textAlign: "center"}}>會員註冊</h1>
-            <div style={{margin: "0 auto",
-            marginTop: "2rem",
-            height: "0.1rem",
-            width: "50vw",
-            backgroundColor: "#e2e4dd",
-            alignItems: "center"}}></div>
-            <StyledForm>
-            <div class="formTop">
-          <div class="label">
-            <label for="email" id="email">帳號/Email</label>
-            <label for="password" id="password">密碼</label>
-            <label for="rePassword" id="rePassword">確認密碼</label>
-          </div>
-          <div class="input">
-            <input type="text" required />
-            <input type="password" required />
-            <input type="password" required />
-          </div>
-        </div>
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-        <div class="formButtom">
-          <button type="submit">送出</button>
-        </div>
-            </StyledForm>
-        </Container>
-    );
+  const registerHandler = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("account", e.target[0].value);
+    formData.append("password", e.target[1].value);
+    formData.append("repassword", e.target[2].value);
+
+    setUserData(formData);
+  };
+
+  useEffect(() => {
+    const postData = async () => {
+      const response = await fetch("https://jybluega.com/ez-backend/register", {
+        method: "POST",
+        body: userData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        if (data.status === 403) {
+          alert(data.messages.error);
+        }
+        throw new Error("Something went wrong!");
+      }
+
+      console.log("POST request successful:", data);
+      setIsLoading(false);
+      alert("註冊成功！將導向登入頁。");
+      navigate("/login");
+    };
+    try {
+      postData();
+    } catch (error) {
+      console.log("The error occurred! :", error.message);
+    }
+  }, [userData]);
+
+  return (
+    <Container>
+      <Title title="會員註冊" />
+      <StyledForm onSubmit={registerHandler}>
+        <label htmlFor="account">帳號/Email</label>
+        <input
+          id="account"
+          name="account"
+          type="email"
+          placeholder="請輸入帳號(email)"
+          required
+        />
+        <label htmlFor="password">密碼</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          minLength="5"
+          maxLength="12"
+          placeholder="請輸入密碼"
+          required
+        />
+        <label htmlFor="repassword">確認密碼</label>
+        <input
+          id="repassword"
+          name="repassword"
+          type="password"
+          minLength="5"
+          maxLength="12"
+          placeholder="請再次輸入密碼"
+          required
+        />
+        <button type="submit" disabled={isLoading}>
+          註冊
+        </button>
+      </StyledForm>
+    </Container>
+  );
 };
 
 export default RegisterPage;

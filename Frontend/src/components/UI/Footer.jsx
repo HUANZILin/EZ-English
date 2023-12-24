@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
+import { UpOutlined } from "@ant-design/icons";
+
 const StyledFooter = styled.footer`
   width: 100%;
   display: flex;
-  align-items: center;
   background-color: #e2e4dd;
   position: relative;
 
@@ -13,10 +14,11 @@ const StyledFooter = styled.footer`
     border-radius: 100%;
     background-color: #58805e;
     color: #e2e4dd;
-    font-size: 20px;
+    font-size: 90px;
     font-weight: bold;
     display: flex;
     align-items: center;
+    align-self: center;
     justify-content: center;
     margin: 0px 50px;
   }
@@ -41,11 +43,12 @@ const StyledFooter = styled.footer`
     list-style: none;
     font-size: 20px;
     margin-left: -30px;
-    line-height: 30px;
+    line-height: 2.5rem;
   }
 
   .block ul li a {
     text-decoration: none;
+    font-weight: 500;
     color: #314543;
     transition: 0.5s;
   }
@@ -64,27 +67,18 @@ const StyledFooter = styled.footer`
 
   button {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 50px;
     height: 50px;
     right: 50px;
     bottom: 50px;
+    color: #e2e4dd;
     background-color: #58805e;
     border: none;
     border-radius: 100%;
     cursor: pointer;
-  }
-
-  button .icon {
-    position: relative;
-    width: 50px;
-    height: 50px;
-  }
-
-  button .icon svg {
-    position: absolute;
-    top: 10px;
-    left: 16px;
-    transform: translate(-50%);
   }
 `;
 
@@ -92,19 +86,19 @@ const Footer = () => {
   return (
     <StyledFooter>
       <div className="logo">
-        <h3>LOGO</h3>
+        <h3>EZ</h3>
       </div>
       <div className="block">
         <h2>聯絡我們</h2>
         <ul>
           <li>
-            <a href="#">Blabla</a>
+            <a href="#">關於 About</a>
           </li>
           <li>
-            <a href="#">Blabla</a>
+            <a href="#">聯絡 Contact Us</a>
           </li>
           <li>
-            <a href="#">Blabla</a>
+            <a href="#">職涯 Careers</a>
           </li>
         </ul>
       </div>
@@ -112,13 +106,10 @@ const Footer = () => {
         <h2>常見問題</h2>
         <ul>
           <li>
-            <a href="#">Blabla</a>
+            <a href="#">問題中心 QA</a>
           </li>
           <li>
-            <a href="#">Blabla</a>
-          </li>
-          <li>
-            <a href="#">Blabla</a>
+            <a href="#">回報 Report</a>
           </li>
         </ul>
       </div>
@@ -126,38 +117,16 @@ const Footer = () => {
         <h2>使用教學</h2>
         <ul>
           <li>
-            <a href="#">Blabla</a>
+            <a href="#">基本操作 Basic</a>
           </li>
           <li>
-            <a href="#">Blabla</a>
-          </li>
-          <li>
-            <a href="#">Blabla</a>
+            <a href="#">社群 Community</a>
           </li>
         </ul>
       </div>
       <p>@2023 copyright</p>
       <button>
-        <div className="icon">
-          <svg height="50" width="50">
-            <line
-              x1="-10"
-              y1="25"
-              x2="16"
-              y2="4"
-              style={{ stroke: "#e2e4dd", strokeWidth: "5" }}
-            />
-          </svg>
-          <svg height="50" width="50">
-            <line
-              x1="40"
-              y1="25"
-              x2="14"
-              y2="4"
-              style={{ stroke: "#e2e4dd", strokeWidth: "5" }}
-            />
-          </svg>
-        </div>
+        <UpOutlined style={{ fontSize: "3.5rem" }} />
       </button>
     </StyledFooter>
   );

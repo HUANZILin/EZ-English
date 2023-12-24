@@ -1,100 +1,112 @@
 import styled from "styled-components";
 
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-top: 8rem;
-`;
+import Container from "../components/UI/Container";
+import Title from "../components/Title";
+import { useState } from "react";
 
 const StyledForm = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 2rem;
+
+  label {
+    font-size: 1.5rem;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  input {
+    height: 2.5rem;
+    width: 20vw;
     text-align: center;
-    .formTop {
-        display: flex;
-        margin: 3rem 0rem 3rem 0rem;
-      }
-      .formButtom {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 5rem;
-        a {
-          color: #e2e4dd;
-          text-decoration: none;
-          padding: 0.1rem 3rem;
-        }
-        .register {
-          margin-top: 10px;
-          text-decoration: underline;
-        }
-      }
-      .label {
-        display: flex;
-        flex-direction: column;
-        padding-right: 2rem;
-        align-items: center;
-        label {
-          font-size: 1.5rem;
-          font-weight: 500;
-          margin-bottom: 15px;
-        }
-      }
-      .input {
-        display: flex;
-        flex-direction: column;
-        input {
-          background-color: #e2e4dd;
-          color: #314543;
-          border: none;
-          outline: none;
-          border-radius: 20px;
-          padding: 6px 25px 6px 25px;
-          margin-bottom: 2rem;
-        }
-      }
-      button {
-        background-color: #314543;
-        color: #e2e4dd;
-        border: none;
-        border-radius: 30px;
-        padding: 0.5rem 1rem;
-      }
+    line-height: 2.5rem;
+    color: #314543;
+    background-color: #e2e4dd;
+    border: 0px;
+    border-radius: 2rem;
+    float: right;
+    outline: none;
+  }
+
+  input::placeholder {
+    color: #314543;
+    opacity: 0.6;
+  }
+
+  button {
+    margin: 60px 10px 100px 10px;
+    height: 2.5rem;
+    font-size: 1rem;
+    color: #e2e4dd;
+    background-color: #314543;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 40px;
+  }
 `;
 
 const ForgetPassword = () => {
-    return(
-        <Container>
-            <h1 style={{color: "#e2e4dd",
-            letterSpacing: "1rem",
-            textAlign: "center"}}>忘記密碼</h1>
-            <div style={{margin: "0 auto",
-            marginTop: "2rem",
-            height: "0.1rem",
-            width: "50vw",
-            backgroundColor: "#e2e4dd",
-            alignItems: "center"}}></div>
-            <StyledForm>
-            <div class="formTop">
-          <div class="label">
-            <label for="email">帳號/Email</label>
-          </div>
-          <div class="input">
-            <input id="email" type="email" name="email" required />
-          </div>
-        </div>
+  const [inputValue, setInputValue] = useState("");
+  const [sendMail, setSendMail] = useState(false);
 
-        <div class="formButtom">
-          <button id="submit" type="submit">
-          <a href="#">寄出驗證信</a></button>
-        </div>
-            </StyledForm>
-        </Container>
-
+  if (sendMail) {
+    return (
+      <Container>
+        <Title title="取得密碼" />
+        <StyledForm action="">
+          <label htmlFor="account">驗證碼</label>
+          <input
+            type="email"
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+            }}
+            placeholder="請輸入您信箱收到的驗證碼"
+            required
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              alert("臨時密碼已發送至您的信箱。");
+              location.href = "/login";
+            }}
+          >
+            寄送驗證信
+          </button>
+        </StyledForm>
+      </Container>
     );
+  }
+
+  return (
+    <Container>
+      <Title title="忘記密碼" />
+      <StyledForm action="">
+        <label htmlFor="account">帳號/Email</label>
+        <input
+          type="email"
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+          }}
+          placeholder="請輸入您的帳號(email)"
+          required
+        />
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setInputValue("");
+            alert("驗證碼已發送至您的信箱。");
+            setSendMail(true);
+          }}
+        >
+          寄送驗證信
+        </button>
+      </StyledForm>
+    </Container>
+  );
 };
 
 export default ForgetPassword;

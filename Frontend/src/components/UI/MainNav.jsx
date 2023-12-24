@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { NavLink, redirect } from "react-router-dom";
 import styled from "styled-components";
 
 const Nav = styled.nav`
@@ -29,7 +31,7 @@ const Nav = styled.nav`
   }
 
   .logo #logo {
-    font-size: 16px;
+    font-size: 54px;
     color: #e2e4dd;
     font-weight: bold;
   }
@@ -75,37 +77,78 @@ const Nav = styled.nav`
   }
 `;
 
-const MainNav = () => {
+const MainNav = (props) => {
+  const [isLogging, setIsLogging] = useState(false);
+
+  useEffect(() => {
+    if (props.token === null) {
+      setIsLogging(false);
+    } else {
+      setIsLogging(true);
+    }
+  }, [isLogging]);
+
   return (
     <Nav>
       <div className="logo">
-        <a href="#" id="logo">
-          LOGO
-        </a>
+        <NavLink to={"/"} id="logo">
+          EZ
+        </NavLink>
       </div>
       <div className="card_list">
-        <a href="#" id="card">
+        <NavLink to={isLogging ? "vocabulary/list" : "remindlogin"}>
           單字列表
-        </a>
+        </NavLink>
         <div className="list">
-          <a href="#" style={{ marginTop: "20px" }}>
+          <NavLink
+            to={isLogging ? "vocabulary/card" : "remindlogin"}
+            style={{ marginTop: "20px" }}
+          >
             單字卡
-          </a>
-          <hr style={{ color: "#58805e" }} />
-          <a href="#">收藏單字</a>
-          <hr style={{ color: "#58805e" }} />
-          <a href="#">單字練習</a>
+          </NavLink>
+          <hr />
+          <NavLink to={isLogging ? "vocabulary/collection" : "remindlogin"}>
+            收藏單字
+          </NavLink>
+          <hr />
+          <NavLink to={isLogging ? "vocabulary/practice" : "remindlogin"}>
+            單字練習
+          </NavLink>
         </div>
       </div>
-      <a href="#">影片推薦</a>
-      <a href="#">AI對話</a>
-      <a href="#">學習分析</a>
-      <a href="#" id="member" style={{ right: "140px" }}>
-        會員資料
-      </a>
-      <a href="#" id="member">
-        登出
-      </a>
+      <NavLink to={isLogging ? "video" : "remindlogin"}>影片推薦</NavLink>
+      <NavLink to={isLogging ? "aicommunication" : "remindlogin"}>
+        AI對話
+      </NavLink>
+      <div className="card_list">
+        <NavLink to={isLogging ? "analysis" : "remindlogin"}>學習分析</NavLink>
+        <div className="list">
+          <NavLink
+            to={isLogging ? "analysis/record" : "remindlogin"}
+            style={{ marginTop: "20px" }}
+          >
+            練習紀錄
+          </NavLink>
+        </div>
+      </div>
+      {isLogging ? (
+        <>
+          <NavLink
+            to={isLogging ? "member" : "remindlogin"}
+            id="member"
+            style={{ right: "140px" }}
+          >
+            會員資料
+          </NavLink>
+          <NavLink onClick={props.onLogout} id="member">
+            登出
+          </NavLink>
+        </>
+      ) : (
+        <NavLink to={"login"} id="member">
+          登入
+        </NavLink>
+      )}
     </Nav>
   );
 };
